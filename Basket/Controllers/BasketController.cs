@@ -83,7 +83,6 @@ namespace Basket.Controllers
         [HttpDelete]
         public StatusCodeResult RemoveFromBasket(int customerId, int productId)
         {
-
             var isProductDeleted = _basket.RemoveFromBasket(customerId, productId);
 
             if (isProductDeleted)
