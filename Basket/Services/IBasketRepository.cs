@@ -13,5 +13,7 @@ namespace Basket.Services
         public BasketWithGoods GetBasket(int customerId);
 
         public bool RemoveFromBasket(int customerId, int productId);
+
+        public void UpdateBasket(ProductsInBasket prods, int customerId, int productId);
     }
 }

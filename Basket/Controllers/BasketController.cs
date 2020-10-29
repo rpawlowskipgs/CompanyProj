@@ -27,9 +27,10 @@ namespace Basket.Controllers
         }
 
         [HttpPost]
-        public void AddToBasket(int customerId, int productId)
+        public void AddToBasket(int customerId, int productId, int quantity = 1)
         {
             var currentBasket = _basket.GetBasket(customerId);
+
             if (currentBasket == null)
             {
                 currentBasket = new BasketWithGoods
@@ -46,15 +47,16 @@ namespace Basket.Controllers
                 };
                 _basket.AddToBasket(currentBasket);
             }
-            else
+            else if (currentBasket.CustomerId == customerId && currentBasket.ProductIds.Select(i => i.ProductId).Contains(productId))
             {
-                currentBasket.ProductIds = new List<ProductsInBasket>
+                var currentItems = currentBasket.ProductIds.Select(i => i.Quantity).FirstOrDefault();
+
+                var prods = new ProductsInBasket
                 {
-                    new ProductsInBasket
-                    {
-                        Quantity = productId + 1
-                    }
+                        Quantity = currentItems + quantity
                 };
+                int number = currentItems + quantity;
+                _basket.UpdateBasket(prods, customerId, productId);
             }
         }
 

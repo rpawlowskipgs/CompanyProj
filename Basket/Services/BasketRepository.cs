@@ -16,6 +16,16 @@ namespace Basket.Services
             _basket.Add(basket);
         }
 
+        public void UpdateBasket(ProductsInBasket prods, int customerId, int productId)
+        {
+            var itemToUpdate = _basket.FirstOrDefault(c => c.CustomerId == customerId).ProductIds
+                .FirstOrDefault(p => p.ProductId == productId);
+            if (itemToUpdate != null)
+            {
+                itemToUpdate.Quantity = prods.Quantity;
+            }
+        }
+
         public BasketWithGoods GetBasket(int customerId)
         {
             return _basket.FirstOrDefault(b => b.CustomerId == customerId);
