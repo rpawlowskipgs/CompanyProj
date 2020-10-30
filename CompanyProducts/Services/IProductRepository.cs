@@ -8,7 +8,7 @@ namespace CompanyProducts.Services
 {
     public interface IProductRepository
     {
-        List<Product> GetProducts();
+        IEnumerable<Product> GetProducts();
 
         Product GetProductById(int id);
 

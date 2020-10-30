@@ -14,6 +14,6 @@ namespace Basket.Services
 
         public bool RemoveFromBasket(int customerId, int productId);
 
-        public void UpdateBasket(ProductsInBasket prods, int customerId, int productId);
+        public void UpdateBasket(List<ProductsInBasket> prods, int customerId);
     }
 }

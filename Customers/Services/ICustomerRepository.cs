@@ -8,7 +8,7 @@ namespace Customers.Services
 {
     public interface ICustomerRepository
     {
-        List<Customer> GetCustomers();
+        IEnumerable<Customer> GetCustomers();
 
         Customer GetCustomerById(int id);
 

@@ -12,6 +12,6 @@ namespace Basket.Models
     {
         public Customer Customer { get; set; }
 
-        public List<Product> Product { get; set; }    
+        public List<ProductResponse> Product { get; set; }    
     }
 }

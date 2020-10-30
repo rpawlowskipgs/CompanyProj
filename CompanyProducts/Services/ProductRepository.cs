@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,11 +10,11 @@ namespace CompanyProducts.Services
     public class ProductRepository : IProductRepository
     {
         private static object _productsLock = new object();
-        private List<Product> _products;
+        private ConcurrentBag<Product> _products;
 
         public ProductRepository()
         {
-            _products = new List<Product>
+            _products = new ConcurrentBag<Product>
             {
                 new Product { ProductId = 1, Name = "Super", Price = 100 },
                 new Product { ProductId = 2, Name = "Fancy", Price = 90 },
@@ -21,42 +22,33 @@ namespace CompanyProducts.Services
             };
         }
 
-        public List<Product> GetProducts()
+        public IEnumerable<Product> GetProducts()
         {
-            lock (_productsLock)
-            {
-                return _products;
-            }
+            return _products;
         }
 
         public Product GetProductById(int id)
         {
-            lock (_productsLock)
-            {
-                return _products.FirstOrDefault(p => p.ProductId == id);
-            }
+
+            return _products.FirstOrDefault(p => p.ProductId == id);
+
         }
 
         public void AddProduct(Product product)
         {
-            lock (_productsLock)
-            {
-                product.ProductId = _products.Select(p => p.ProductId).Max() + 1;
-                _products.Add(product);
-            }
+
+            product.ProductId = _products.Select(p => p.ProductId).Max() + 1;
+            _products.Add(product);
         }
 
         public void UpdateProduct(int id, Product product)
         {
             var productToUpdate = _products.FirstOrDefault(p => p.ProductId == id);
 
-            lock (_productsLock)
+            if (productToUpdate != null)
             {
-                if (productToUpdate != null)
-                {
-                    productToUpdate.Name = product.Name;
-                    productToUpdate.Price = product.Price;
-                }
+                productToUpdate.Name = product.Name;
+                productToUpdate.Price = product.Price;
             }
         }
 
@@ -64,13 +56,8 @@ namespace CompanyProducts.Services
         {
             var productToDelete = _products.FirstOrDefault(p => p.ProductId == id);
 
-            lock (_productsLock)
-            {
-                if (productToDelete != null)
-                {
-                    _products.Remove(productToDelete);
-                }
-            }
+            if (productToDelete != null)
+                _products.TryTake(out productToDelete);
         }
     }
 }

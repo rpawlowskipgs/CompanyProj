@@ -36,28 +36,26 @@ namespace Basket.Controllers
                 currentBasket = new BasketWithGoods
                 {
                     CustomerId = customerId,
-                    ProductIds = new List<ProductsInBasket>
-                    {
-                        new ProductsInBasket
-                        {
-                            ProductId = productId,
-                            Quantity = 1
-                        }
-                    }
+                    ProductIds = new List<ProductsInBasket>()
                 };
                 _basket.AddToBasket(currentBasket);
             }
-            else if (currentBasket.CustomerId == customerId && currentBasket.ProductIds.Select(i => i.ProductId).Contains(productId))
-            {
-                var currentItems = currentBasket.ProductIds.Select(i => i.Quantity).FirstOrDefault();
 
-                var prods = new ProductsInBasket
-                {
-                        Quantity = currentItems + quantity
-                };
-                int number = currentItems + quantity;
-                _basket.UpdateBasket(prods, customerId, productId);
+            var productsInBasket = currentBasket.ProductIds.FirstOrDefault(p => p.ProductId == productId);
+
+            if (productsInBasket != null)
+            {
+                productsInBasket.Quantity += quantity;
             }
+            else
+            {
+                currentBasket.ProductIds.Add(new ProductsInBasket
+                {
+                    ProductId = productId,
+                    Quantity = quantity
+                });
+            }
+            _basket.UpdateBasket(currentBasket.ProductIds, customerId);
         }
 
         [HttpGet]
@@ -77,8 +75,11 @@ namespace Basket.Controllers
             }
             await Task.WhenAll(products);
 
-            basketResponse.Product = products.Select(p => p.Result).ToList();
+            var allProducts = products.Select(p => p.Result).ToList();
+
+            basketResponse.Product = MapBasketResponseToProductResponse(allProducts, currentBasket.ProductIds).ToList();
             basketResponse.Customer = customerInfo;
+
             return basketResponse;
         }
 
@@ -92,6 +93,41 @@ namespace Basket.Controllers
                 return Ok();
             }
             return NotFound();
+        }
+
+        [HttpPut]
+        public void UpdateQuantityOfProducts(int customerId, int productId, int quantity = 1)
+        {
+            var currentBasket = _basket.GetBasket(customerId);
+            var productsInBasket = currentBasket.ProductIds.FirstOrDefault(p => p.ProductId == productId);
+
+            if (productsInBasket != null)
+            {
+                productsInBasket.Quantity = quantity;
+            }
+            else
+            {
+                currentBasket.ProductIds.Add(new ProductsInBasket
+                {
+                    ProductId = productId,
+                    Quantity = quantity
+                });
+            }
+        }
+
+        private IEnumerable<ProductResponse> MapBasketResponseToProductResponse(IEnumerable<Product> products, IEnumerable<ProductsInBasket> baskets)
+        {
+            List<ProductResponse> productResponse = new List<ProductResponse>();
+            foreach (var basket in baskets)
+            {
+                productResponse.Add(new ProductResponse
+                    {
+                        Quantity = basket.Quantity,
+                        Details = products.FirstOrDefault(p => p.ProductId == basket.ProductId)
+                    });
+            }
+            
+            return productResponse;
         }
     }
 }

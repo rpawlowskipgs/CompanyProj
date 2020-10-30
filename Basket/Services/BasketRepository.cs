@@ -16,13 +16,12 @@ namespace Basket.Services
             _basket.Add(basket);
         }
 
-        public void UpdateBasket(ProductsInBasket prods, int customerId, int productId)
+        public void UpdateBasket(List<ProductsInBasket> prods, int customerId)
         {
-            var itemToUpdate = _basket.FirstOrDefault(c => c.CustomerId == customerId).ProductIds
-                .FirstOrDefault(p => p.ProductId == productId);
-            if (itemToUpdate != null)
+            var basketForCustomer = _basket.FirstOrDefault(c => c.CustomerId == customerId);
+            if (basketForCustomer != null)
             {
-                itemToUpdate.Quantity = prods.Quantity;
+                basketForCustomer.ProductIds = prods;
             }
         }
 
