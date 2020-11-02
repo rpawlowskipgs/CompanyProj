@@ -32,6 +32,7 @@ namespace Basket
             services.AddSingleton<ApiHelper>();
             services.AddTransient<ICustomerDetailsRepository, CustomerDetailsRepository>();
             services.AddTransient<IProductDetailsRepository, ProductDetailsRepository>();
+            services.AddTransient<IBasketService, BasketService>();
             services.AddMvc();
             services.AddOptions();
             services.Configure<ProductConfiguration>(Configuration.GetSection("ProductsSettings"));
