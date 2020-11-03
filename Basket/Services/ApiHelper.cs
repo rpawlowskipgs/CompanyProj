@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Basket.Services
 {
-    public class ApiHelper
+    public class ApiHelper : IApiHelper
     {
         private readonly HttpClient httpClient;
         public ApiHelper()

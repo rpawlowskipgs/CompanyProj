@@ -10,10 +10,10 @@ namespace Basket.Services
 {
     public class CustomerDetailsRepository : ICustomerDetailsRepository
     {
-        private readonly ApiHelper _apiHelper;
+        private readonly IApiHelper _apiHelper;
         private readonly IOptions<CustomerConfiguration> _settingsUrl;
 
-        public CustomerDetailsRepository(ApiHelper apiHelper, IOptions<CustomerConfiguration> settingsUrl)
+        public CustomerDetailsRepository(IApiHelper apiHelper, IOptions<CustomerConfiguration> settingsUrl)
         {
             _apiHelper = apiHelper;
             _settingsUrl = settingsUrl;
