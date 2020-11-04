@@ -30,6 +30,7 @@ namespace Basket
             services.AddControllers();
             services.AddSingleton<IBasketRepository, BasketRepository>();
             services.AddSingleton<ApiHelper>();
+            services.AddTransient<IApiHelper, ApiHelper>();
             services.AddTransient<ICustomerDetailsRepository, CustomerDetailsRepository>();
             services.AddTransient<IProductDetailsRepository, ProductDetailsRepository>();
             services.AddTransient<IBasketService, BasketService>();

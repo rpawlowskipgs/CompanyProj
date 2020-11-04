@@ -32,7 +32,7 @@ namespace Basket.Services
                 _basket.AddToBasket(currentBasket);
             }
 
-            var productsInBasket = currentBasket.ProductIds.FirstOrDefault(p => p.ProductId == productId);
+            var productsInBasket = currentBasket.ProductIds?.FirstOrDefault(p => p.ProductId == productId);
 
             if (productsInBasket != null)
             {
