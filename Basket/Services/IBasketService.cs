@@ -8,10 +8,12 @@ namespace Basket.Services
 {
     public interface IBasketService
     {
-        public void AddProductsToBasket(int customerId, int productId, int quantity);
+        public bool AddProductsToBasket(int customerId, int productId, int quantity);
 
         public Task<BasketResponse> GetCurrentBasketProducts(int customerId);
 
         public void UpdateQuantityOfProductsInBasket(int customerId, int productId, int quantity);
+
+        public bool RemoveFromBasket(int customerId, int productId);
     }
 }

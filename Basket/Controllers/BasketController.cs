@@ -9,32 +9,42 @@ namespace Basket.Controllers
     [Route("[controller]")]
     public class BasketController : ControllerBase
     {
-        private readonly IBasketRepository _basket;
         private readonly IBasketService _basketService;
 
-        public BasketController(IBasketRepository basket,
-                                IBasketService basketService)
+        public BasketController(IBasketService basketService)
         {
-            _basket = basket;
             _basketService = basketService;
         }
 
         [HttpPost]
-        public void AddToBasket(int customerId, int productId, int quantity = 1)
+        public ActionResult AddToBasket(int customerId, int productId, int quantity = 1)
         {
-            _basketService.AddProductsToBasket(customerId, productId, quantity);
+            bool isAdded =_basketService.AddProductsToBasket(customerId, productId, quantity);
+            if (isAdded)
+            {
+                return Ok();
+            }
+
+            return NotFound();
         }
 
         [HttpGet]
-        public async Task<BasketResponse> GetBasket(int customerId)
+        public async Task<ActionResult<BasketResponse>> GetBasket(int customerId)
         {
-            return await _basketService.GetCurrentBasketProducts(customerId);
+            var currentBasketProducts = await _basketService.GetCurrentBasketProducts(customerId);
+
+            if (currentBasketProducts == null)
+            {
+                return NotFound();
+            }
+
+            return currentBasketProducts;
         }
 
         [HttpDelete]
-        public StatusCodeResult RemoveFromBasket(int customerId, int productId)
+        public ActionResult RemoveFromBasket(int customerId, int productId)
         {
-            var isProductDeleted = _basket.RemoveFromBasket(customerId, productId);
+            var isProductDeleted = _basketService.RemoveFromBasket(customerId, productId);
 
             if (isProductDeleted)
             {
@@ -44,9 +54,14 @@ namespace Basket.Controllers
         }
 
         [HttpPut]
-        public void UpdateQuantityOfProducts(int customerId, int productId, int quantity = 1)
+        public ActionResult UpdateQuantityOfProducts(int customerId, int productId, int quantity = 1)
         {
+            if (quantity <= 0)
+            {
+                return BadRequest();
+            }
             _basketService.UpdateQuantityOfProductsInBasket(customerId, productId, quantity);
+            return Ok();
         }
     }
 }

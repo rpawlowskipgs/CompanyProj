@@ -29,18 +29,5 @@ namespace Basket.Services
         {
             return _basket.FirstOrDefault(b => b.CustomerId == customerId);
         }
-
-        public bool RemoveFromBasket(int customerId, int productId)
-        {
-            var isDeleted = false;
-            var currentBasket = GetBasket(customerId);
-            if (currentBasket != null)
-            {
-                var productToDelete = currentBasket.ProductIds.FirstOrDefault(p => p.ProductId == productId);
-                isDeleted = currentBasket.ProductIds.Remove(productToDelete);
-            }
-
-            return isDeleted;
-        }
     }
 }

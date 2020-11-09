@@ -18,8 +18,9 @@ namespace Basket.Services
             _productDetailsRepository = productDetailsRepository;
         }
 
-        public void AddProductsToBasket(int customerId, int productId, int quantity)
+        public bool AddProductsToBasket(int customerId, int productId, int quantity)
         {
+            bool isProductAdded = false;
             var currentBasket = _basket.GetBasket(customerId);
 
             if (currentBasket == null)
@@ -30,9 +31,10 @@ namespace Basket.Services
                     ProductIds = new List<ProductsInBasket>()
                 };
                 _basket.AddToBasket(currentBasket);
+                isProductAdded = true;
             }
 
-            var productsInBasket = currentBasket.ProductIds?.FirstOrDefault(p => p.ProductId == productId);
+            var productsInBasket = currentBasket.ProductIds.FirstOrDefault(p => p.ProductId == productId);
 
             if (productsInBasket != null)
             {
@@ -47,6 +49,7 @@ namespace Basket.Services
                 });
             }
             _basket.UpdateBasket(currentBasket.ProductIds, customerId);
+            return isProductAdded;
         }
 
         public async Task<BasketResponse> GetCurrentBasketProducts(int customerId)
@@ -89,6 +92,19 @@ namespace Basket.Services
                     Quantity = quantity
                 });
             }
+        }
+
+        public bool RemoveFromBasket(int customerId, int productId)
+        {
+            var isDeleted = false;
+            var currentBasket = _basket.GetBasket(customerId);
+            if (currentBasket != null)
+            {
+                var productToDelete = currentBasket.ProductIds.FirstOrDefault(p => p.ProductId == productId);
+                isDeleted = currentBasket.ProductIds.Remove(productToDelete);
+            }
+
+            return isDeleted;
         }
 
         private IEnumerable<ProductResponse> MapBasketResponseToProductResponse(IEnumerable<Product> products, IEnumerable<ProductsInBasket> baskets)
