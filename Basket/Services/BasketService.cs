@@ -11,59 +11,59 @@ namespace Basket.Services
         private readonly IBasketRepository _basket;
         private readonly ICustomerDetailsRepository _customerDetailsRepository;
         private readonly IProductDetailsRepository _productDetailsRepository;
+
         public BasketService(IBasketRepository basket, ICustomerDetailsRepository customerDetailsRepository, IProductDetailsRepository productDetailsRepository)
         {
             _basket = basket;
             _customerDetailsRepository = customerDetailsRepository;
             _productDetailsRepository = productDetailsRepository;
         }
-
-        public bool AddProductsToBasket(int customerId, int productId, int quantity)
+        
+        public async Task<Result<BasketResponse>> AddProductsToBasket(int customerId, int productId, int quantity)
         {
-            bool isProductAdded = false;
+            if (quantity <= 0)
+            {
+                return Result.Fail<BasketResponse>(Status.BadRequest);
+            }
+
+            var isCustomerFound = await FindCustomer(customerId);
+            if (!isCustomerFound)
+            {
+                return Result.Fail<BasketResponse>(Status.NotFound);
+            }
+
             var currentBasket = _basket.GetBasket(customerId);
+            AddNewBasket(ref currentBasket, customerId);
 
-            if (currentBasket == null)
+            var productDetails = await _productDetailsRepository.GetProductAsync(productId);
+            if (productDetails == null)
             {
-                currentBasket = new BasketWithGoods
-                {
-                    CustomerId = customerId,
-                    ProductIds = new List<ProductsInBasket>()
-                };
-                _basket.AddToBasket(currentBasket);
-                isProductAdded = true;
+                return Result.Fail<BasketResponse>(Status.BadRequest);
             }
+            
+            IncreaseOrAddProductsInBasket(currentBasket, quantity, productId);
 
-            var productsInBasket = currentBasket.ProductIds.FirstOrDefault(p => p.ProductId == productId);
-
-            if (productsInBasket != null)
-            {
-                productsInBasket.Quantity += quantity;
-            }
-            else
-            {
-                currentBasket.ProductIds.Add(new ProductsInBasket
-                {
-                    ProductId = productId,
-                    Quantity = quantity
-                });
-            }
             _basket.UpdateBasket(currentBasket.ProductIds, customerId);
-            return isProductAdded;
+            return Result.Ok<BasketResponse>(default);
         }
 
-        public async Task<BasketResponse> GetCurrentBasketProducts(int customerId)
+        public async Task<Result<BasketResponse>> GetCurrentBasketProducts(int customerId)
         {
             var currentBasket = _basket.GetBasket(customerId);
 
             BasketResponse basketResponse = new BasketResponse();
+
+            if (currentBasket == null)
+            {
+                return Result.Fail<BasketResponse>(Status.NotFound);
+            }
 
             var customerInfo = await _customerDetailsRepository.GetCustomer(customerId);
 
             List<Task<Product>> products = new List<Task<Product>>();
             foreach (var productId in currentBasket.ProductIds)
             {
-                var productDetails = _productDetailsRepository.GetProduct(productId.ProductId);
+                var productDetails = _productDetailsRepository.GetProductAsync(productId.ProductId);
                 products.Add(productDetails);
             }
             await Task.WhenAll(products);
@@ -72,29 +72,46 @@ namespace Basket.Services
             basketResponse.Product = MapBasketResponseToProductResponse(allProducts, currentBasket.ProductIds).ToList();
             basketResponse.Customer = customerInfo;
 
-            return basketResponse;
+            return Result.Ok(basketResponse);
         }
 
-        public void UpdateQuantityOfProductsInBasket(int customerId, int productId, int quantity)
+        public async Task<Result<BasketResponse>> UpdateQuantityOfProductsInBasket(int customerId, int productId, int quantity)
         {
-            var currentBasket = _basket.GetBasket(customerId);
-            var productsInBasket = currentBasket.ProductIds.FirstOrDefault(p => p.ProductId == productId);
+            if (quantity <= 0)
+            {
+                return Result.Fail<BasketResponse>(Status.BadRequest);
+            }
 
-            if (productsInBasket != null)
+            var currentBasket = _basket.GetBasket(customerId);
+            if (currentBasket == null)
             {
-                productsInBasket.Quantity = quantity;
+                return Result.Fail<BasketResponse>(Status.NotFound);
             }
-            else
+
+            var productDetails = await _productDetailsRepository.GetProductAsync(productId);
+            if (productDetails == null)
             {
-                currentBasket.ProductIds.Add(new ProductsInBasket
-                {
-                    ProductId = productId,
-                    Quantity = quantity
-                });
+                return Result.Fail<BasketResponse>(Status.NotFound);
             }
+
+            IncreaseOrAddProductsInBasket(currentBasket, quantity, productId);
+
+            return Result.Ok<BasketResponse>(default);
         }
 
-        public bool RemoveFromBasket(int customerId, int productId)
+        public Result<BasketResponse> RemoveFromBasket(int customerId, int productId)
+        {
+            var isDeleted = RemoveProduct(customerId, productId);
+
+            if (isDeleted)
+            {
+                return Result.Ok<BasketResponse>(default);
+            }
+
+            return Result.Fail<BasketResponse>(Status.BadRequest);
+        }
+
+        private bool RemoveProduct(int customerId, int productId)
         {
             var isDeleted = false;
             var currentBasket = _basket.GetBasket(customerId);
@@ -120,6 +137,48 @@ namespace Basket.Services
             }
 
             return productResponse;
+        }
+
+        private async Task<bool> FindCustomer(int customerId)
+        {
+            var customerInfo = await _customerDetailsRepository.GetCustomer(customerId);
+            if (customerInfo == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private void AddNewBasket(ref BasketWithGoods currentBasket, int customerId)
+        {
+            if (currentBasket == null)
+            {
+                currentBasket = new BasketWithGoods
+                {
+                    CustomerId = customerId,
+                    ProductIds = new List<ProductsInBasket>()
+                };
+                _basket.AddToBasket(currentBasket);
+            }
+        }
+
+        private void IncreaseOrAddProductsInBasket(BasketWithGoods currentBasket, int quantity, int productId)
+        {
+            var productsInBasket = currentBasket.ProductIds.FirstOrDefault(p => p.ProductId == productId);
+
+            if (productsInBasket != null)
+            {
+                productsInBasket.Quantity += quantity;
+            }
+            else
+            {
+                currentBasket.ProductIds.Add(new ProductsInBasket
+                {
+                    ProductId = productId,
+                    Quantity = quantity
+                });
+            }
         }
     }
 }

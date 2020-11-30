@@ -8,6 +8,6 @@ namespace Basket.Services
 {
     public interface IProductDetailsRepository
     {
-        public Task<Product> GetProduct(int productId);
+        public Task<Product> GetProductAsync(int productId);
     }
 }

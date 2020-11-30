@@ -36,7 +36,7 @@ namespace BasketTest
             var productDetails = new ProductDetailsRepository(apiHelperMock.Object, optionsMock.Object);
 
             // Act
-            var result = await productDetails.GetProduct(1);
+            var result = await productDetails.GetProductAsync(1);
 
             // Assert
             result.Should().BeEquivalentTo(product);
@@ -58,7 +58,7 @@ namespace BasketTest
             var productDetails = new ProductDetailsRepository(apiHelperMock.Object, optionsMock.Object);
 
             // Act
-            await productDetails.GetProduct(1);
+            await productDetails.GetProductAsync(1);
 
             // Assert
             apiHelperMock.Verify(x => x.Get<Product>(new Uri("https://trojmiasto.pl/1")));
