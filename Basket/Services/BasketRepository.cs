@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Basket.Models;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Customers.Models;
 
 namespace Basket.Services
 {

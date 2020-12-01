@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Basket.Configuration;
 using Basket.Services;
-using Customers.Models;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
+using Models.Customers.Models;
 using Moq;
 using Xunit;
 

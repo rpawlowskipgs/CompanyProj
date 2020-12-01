@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Basket.Services;
-using CompanyProducts.Models;
-using Customers.Models;
+﻿using System.Collections.Generic;
+using Models.Customers.Models;
 
 namespace Basket.Models
 {

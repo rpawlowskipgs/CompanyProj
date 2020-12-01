@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Customers.Models;
+using Models.Customers.Models;
 
 namespace Customers.Services
 {
@@ -14,6 +12,7 @@ namespace Customers.Services
 
         public CustomerRepository()
         {
+            // To be deleted soon :)
             _customers = new ConcurrentBag<Customer>
             {
                 new Customer { CustomerId = 1, FirstName = "John", LastName = "Kowalskey", Age = 59 },

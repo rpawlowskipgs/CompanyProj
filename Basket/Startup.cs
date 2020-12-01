@@ -54,6 +54,8 @@ namespace Basket
             services.AddOptions();
             services.Configure<ProductConfiguration>(Configuration.GetSection("ProductsSettings"));
             services.Configure<CustomerConfiguration>(Configuration.GetSection("CustomerSettings"));
+
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +65,13 @@ namespace Basket
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Basket API V1");
+            });
 
             app.UseRouting();
 

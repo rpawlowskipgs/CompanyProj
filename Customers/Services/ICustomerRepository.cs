@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Customers.Models;
+﻿using System.Collections.Generic;
+using Models.Customers.Models;
 
 namespace Customers.Services
 {

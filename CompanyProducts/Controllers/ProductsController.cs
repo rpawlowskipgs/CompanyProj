@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using CompanyProducts.Models;
 using CompanyProducts.Services;
 using Microsoft.AspNetCore.Mvc;
+using Models.Products.Models;
 
 namespace CompanyProducts.Controllers
 {

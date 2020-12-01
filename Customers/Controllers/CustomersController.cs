@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Customers.Models;
+﻿using System.Collections.Generic;
 using Customers.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models.Customers.Models;
 
 namespace Customers.Controllers
 {

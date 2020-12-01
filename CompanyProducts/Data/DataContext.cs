@@ -1,5 +1,5 @@
-﻿using CompanyProducts.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Models.Products.Models;
 
 namespace CompanyProducts.Data
 {

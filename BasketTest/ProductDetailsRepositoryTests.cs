@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Basket.Configuration;
 using Basket.Services;
-using CompanyProducts.Models;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
+using Models.Products.Models;
 using Moq;
 using Xunit;
 

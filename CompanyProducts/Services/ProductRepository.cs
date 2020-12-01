@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CompanyProducts.Models;
+using Models.Products.Models;
 
 namespace CompanyProducts.Services
 {
@@ -14,6 +14,7 @@ namespace CompanyProducts.Services
 
         public ProductRepository()
         {
+            // To be deleted soon :)
             _products = new ConcurrentBag<Product>
             {
                 new Product { ProductId = 1, Name = "Super", Price = 100 },

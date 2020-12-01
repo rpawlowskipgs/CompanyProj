@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Basket.Configuration;
-using Customers.Models;
 using Microsoft.Extensions.Options;
+using Models.Customers.Models;
 
 namespace Basket.Services
 {

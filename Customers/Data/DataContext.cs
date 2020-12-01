@@ -1,5 +1,5 @@
-﻿using Customers.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Models.Customers.Models;
 
 namespace Customers.Data
 {

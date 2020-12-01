@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Basket.Models;
-using CompanyProducts.Models;
+using Models.Products.Models;
 
 namespace Basket.Services
 {

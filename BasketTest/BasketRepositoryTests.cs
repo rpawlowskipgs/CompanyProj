@@ -4,7 +4,6 @@ using Basket.Models;
 using Basket.Services;
 using Xunit;
 using FluentAssertions;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace BasketTest
 {

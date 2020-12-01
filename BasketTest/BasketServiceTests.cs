@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Basket.Models;
 using Basket.Services;
-using CompanyProducts.Models;
-using Customers.Models;
 using FluentAssertions;
+using Models.Customers.Models;
+using Models.Products.Models;
 using Moq;
 using Xunit;
 
