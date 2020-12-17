@@ -1,0 +1,10 @@
+<h2>List of baskets</h2>
+  <ul class="baskets">
+    <li *ngFor="let basket of baskets">
+      <a routerLink="/detail/{{basket.basketId}}"></a>
+      <span class="badge">{{basket.basketId}}</span>{{basket.productName}}
+    </li>
+  </ul>
+
+<!-- <app-basket-detail [basket]="selectedBasket"></app-basket-detail> -->
+

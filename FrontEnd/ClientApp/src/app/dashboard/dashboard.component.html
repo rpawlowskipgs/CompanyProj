@@ -1,0 +1,8 @@
+<h2>My Baskets</h2>
+<div class="grid grid-pad">
+    <a *ngFor="let basket of baskets" class="col-1-4" routerLink="/detail/{{basket.basketId}}">
+        <div class="module basket">
+            <h4>{{basket.productName}}</h4>
+        </div>
+    </a>
+</div>

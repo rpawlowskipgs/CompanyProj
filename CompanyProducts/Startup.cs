@@ -22,7 +22,7 @@ namespace CompanyProducts
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(d =>
-                d.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                d.UseSqlServer(Configuration.GetConnectionString("AzureConnection")));
 
             services.AddControllers();
             services.AddTransient<IProductRepository, ProductRepository>();

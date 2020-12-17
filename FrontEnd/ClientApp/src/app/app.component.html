@@ -1,0 +1,12 @@
+<body>
+  <app-nav-menu></app-nav-menu>
+  <div class="container">
+    <h2>{{title}}</h2>
+    <nav>
+      <a routerLink="/dashboard">Dashboard</a><br>
+      <a routerLink="/basket">Basket</a>
+    </nav>
+    <router-outlet></router-outlet>
+    <app-messages></app-messages>
+  </div>
+</body>

@@ -34,7 +34,7 @@ namespace Basket
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(d =>
-                d.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                d.UseSqlServer(Configuration.GetConnectionString("AzureConnection")));
 
             services.AddCors();
             services.AddControllers();
